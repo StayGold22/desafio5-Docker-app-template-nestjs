@@ -10,13 +10,12 @@ services:
       - MONGO_URI=mongodb://mongo:27017/app_db
     depends_on:
       - mongo
-    command: node dist/main
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
 
   mongo:
-    image: mongo:4.4
+    image: mongo:4.4   # usamos 4.4 para evitar el problema de AVX
     container_name: mongo_db
     ports:
       - "27017:27017"
