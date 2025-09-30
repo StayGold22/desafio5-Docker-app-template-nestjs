@@ -1,0 +1,67 @@
+# desafio5-Docker
+
+1 - Clonamos el repo 
+--
+git clone https://github.com/StayGold22/desafio5-Docker-app-template-nestjs.git
+
+2 - Ingresamos a la carpeta desafio5-Docker-app-template-nestjs
+--
+cd desafio5-Docker-app-template-nestjs/
+
+3 - Levantamos el docker
+--
+docker compose up --build
+
+4 - Una vez levanto, verificamos con un docker ps
+--
+root@aws-sandbox:~# docker ps
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+CONTAINER ID  IMAGE                                                     COMMAND            CREATED        STATUS        PORTS                     NAMES
+e43bcb933c04  docker.io/library/mongo:4.4                               mongod             3 minutes ago  Up 3 minutes  0.0.0.0:27017->27017/tcp  mongo_db
+37c398452a1e  localhost/desafio5-docker-app-template-nestjs_app:latest  npm run start:dev  3 minutes ago  Up 2 minutes  0.0.0.0:3000->3000/tcp    nest_app
+
+5 - Probamos el endpoint
+--
+curl http://localhost:3000
+root@aws-sandbox:~# curl http://localhost:3000
+
+Hello World!root@aws-sandbox:~# 
+
+6 - Ingresamos a la db Mongo y probamos su funcionamiento 
+--
+root@aws-sandbox:~# docker exec -it mongo_db mongo
+
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+MongoDB shell version v4.4.29
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("5861d94b-216c-4ce5-8c6a-63a51cc6390c") }
+MongoDB server version: 4.4.29
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+https://docs.mongodb.com/
+Questions? Try the MongoDB Developer Community Forums
+https://community.mongodb.com
+---
+The server generated these startup warnings when booting: 
+        2025-09-30T08:54:01.443+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+        2025-09-30T08:54:01.989+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+
+> use app_db
+switched to db app_db
+
+> db.createCollection("test")
+{ "ok" : 1 }
+
+> db.test.insertOne({ nombre: "StayGold", curso: "Docker" })
+{
+"acknowledged" : true,
+"insertedId" : ObjectId("68db9c1e56f4d96f272d31d7")
+}
+
+> db.test.find()
+{ "_id" : ObjectId("68db9c1e56f4d96f272d31d7"), "nombre" : "StayGold", "curso" : "Docker" }
+
+> exit
+bye
